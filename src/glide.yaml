@@ -1,0 +1,5 @@
+package: .
+import:
+- package: google.golang.org/appengine
+  subpackages:
+  - datastore

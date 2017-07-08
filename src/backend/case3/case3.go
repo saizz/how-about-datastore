@@ -20,8 +20,7 @@ func init() {
 	http.HandleFunc("/_ah/tq/long-tx", handleLongTx)
 }
 
-// Entity is .
-type Entity struct {
+type entity struct {
 	Value int
 }
 
@@ -91,7 +90,7 @@ func handleLongTx(w http.ResponseWriter, r *http.Request) {
 		id := "0000"
 		k := datastore.NewKey(ctx, "case3-child", id, 0, pkey)
 
-		e := &Entity{
+		e := &entity{
 			// Value: rand.Intn(q.count),
 			Value: n,
 		}

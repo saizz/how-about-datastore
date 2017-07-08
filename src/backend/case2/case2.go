@@ -22,14 +22,12 @@ import (
 
 func init() {
 
-	http.HandleFunc("/case2-no-tx", handleCase2NoTx)
-	http.HandleFunc("/case2-tx", handleCase2Tx)
+	http.HandleFunc("/case2", handleCase2)
 
 	rand.Seed(time.Now().UnixNano())
 }
 
-// Entity is .
-type Entity struct {
+type entity struct {
 	Value int
 }
 
@@ -78,7 +76,7 @@ func parseQuery(r *http.Request) (*query, error) {
 
 	p := &parser{}
 
-	concurrent := p.ParseInt(defaultValue(r.FormValue("con"), "1"))
+	concurrent := p.ParseInt(defaultValue(r.FormValue("concurrent"), "1"))
 	parent := p.ParseInt(defaultValue(r.FormValue("parent"), "1"))
 	child := p.ParseInt(defaultValue(r.FormValue("child"), "1"))
 	sleep := p.ParseInt(defaultValue(r.FormValue("sleep"), "0"))
@@ -109,7 +107,7 @@ func put(ctx context.Context, q *query, c int) error {
 
 			id := fmt.Sprintf("%04d", i)
 			k := datastore.NewKey(ctx, "case2-child", id, 0, pkey)
-			e := &Entity{
+			e := &entity{
 				// Value: rand.Intn(q.count),
 				Value: c,
 			}
@@ -145,67 +143,13 @@ func putInTransaction(ctx context.Context, q *query, c int) error {
 
 }
 
-func handleCase2NoTx(w http.ResponseWriter, r *http.Request) {
+func handleCase2(w http.ResponseWriter, r *http.Request) {
 
 	ctx := appengine.NewContext(r)
 
 	q, err := parseQuery(r)
 	if err != nil {
-		http.Error(w, errors.Wrap(err, "at handleCase2NoTx").Error(), http.StatusBadRequest)
-		return
-	}
-
-	ch := make(chan error, q.concurrent)
-	var wg sync.WaitGroup
-	go func() {
-		for c := 0; c < q.concurrent; c++ {
-			wg.Add(1)
-
-			go func(c int) {
-				ch <- put(ctx, q, c)
-				wg.Done()
-			}(c)
-		}
-		wg.Wait()
-		close(ch)
-	}()
-
-	me, any := make(appengine.MultiError, 0, q.concurrent), false
-	for {
-		err, ok := <-ch
-		if !ok {
-			break
-		}
-
-		if err != nil {
-			me = append(me, err)
-			any = true
-		}
-	}
-
-	w.Header().Set("Context-Type", "application/json")
-	m := &struct {
-		Message string
-	}{
-		Message: "OK",
-	}
-	if any {
-		m.Message = me.Error()
-		//log.Errorf(ctx, me.Error())
-		w.WriteHeader(http.StatusInternalServerError)
-	}
-
-	b, _ := json.Marshal(m)
-	w.Write(b)
-}
-
-func handleCase2Tx(w http.ResponseWriter, r *http.Request) {
-
-	ctx := appengine.NewContext(r)
-
-	q, err := parseQuery(r)
-	if err != nil {
-		http.Error(w, errors.Wrap(err, "at handleCase2Tx").Error(), http.StatusBadRequest)
+		http.Error(w, errors.Wrap(err, "at handleCase2").Error(), http.StatusBadRequest)
 		return
 	}
 

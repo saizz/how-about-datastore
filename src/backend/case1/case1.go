@@ -22,15 +22,13 @@ import (
 
 func init() {
 
-	http.HandleFunc("/case1-no-tx", handleCase1NoTx)
-	http.HandleFunc("/case1-tx", handleCase1Tx)
+	http.HandleFunc("/case1", handleCase1)
 	http.HandleFunc("/case1-inc-value", handleCase1IncValue)
 
 	rand.Seed(time.Now().UnixNano())
 }
 
-// Entity is .
-type Entity struct {
+type entity struct {
 	Value int
 }
 
@@ -38,6 +36,7 @@ type query struct {
 	concurrent int
 	child      int
 	sleep      int
+	summary    bool
 }
 
 type parser struct {
@@ -60,6 +59,19 @@ func (p *parser) ParseInt(v string) int {
 	return value
 }
 
+func (p *parser) ParseBool(v string) bool {
+
+	if p.err != nil {
+		return false
+	}
+
+	if v == "t" {
+		return true
+	}
+
+	return false
+}
+
 // Err return error, when parsing.
 func (p *parser) Err() error {
 
@@ -78,9 +90,10 @@ func parseQuery(r *http.Request) (*query, error) {
 
 	p := &parser{}
 
-	concurrent := p.ParseInt(defaultValue(r.FormValue("con"), "1"))
+	concurrent := p.ParseInt(defaultValue(r.FormValue("concurrent"), "1"))
 	child := p.ParseInt(defaultValue(r.FormValue("child"), "1"))
 	sleep := p.ParseInt(defaultValue(r.FormValue("sleep"), "0"))
+	summary := p.ParseBool(r.FormValue("summary"))
 
 	err := p.Err()
 	if err != nil {
@@ -91,6 +104,7 @@ func parseQuery(r *http.Request) (*query, error) {
 		concurrent: concurrent,
 		child:      child,
 		sleep:      sleep,
+		summary:    summary,
 	}, nil
 
 }
@@ -105,21 +119,31 @@ func put(ctx context.Context, q *query, c int) error {
 
 		id := fmt.Sprintf("%04d", i)
 		k := datastore.NewKey(ctx, "case1-child", id, 0, pkey)
-		e := &Entity{
-			// Value: rand.Intn(q.count),
-			Value: c,
+		e := &entity{
+			Value: rand.Intn(q.concurrent * q.child * 100),
+			//Value: c,
 		}
 
 		_, err := datastore.Put(ctx, k, e)
-		if err != nil {
-			log.Errorf(ctx, "put, concurrent=%v, child=%v: %v", c, i, err.Error())
-			any = true
-		} else {
-			log.Infof(ctx, "put, concurrent=%v, child=%v: OK", c, i)
+		if !q.summary {
+			if err != nil {
+				log.Errorf(ctx, "put, concurrent=%v, child=%v: %v", c, i, err.Error())
+				any = true
+			} else {
+				log.Infof(ctx, "put, concurrent=%v, child=%v: OK", c, i)
+			}
 		}
 		me[i] = err
 
 		time.Sleep(time.Duration(q.sleep) * time.Second)
+	}
+
+	if q.summary {
+		if any {
+			log.Errorf(ctx, "any put, concurrent=%v: %v", c, me.Error())
+		} else {
+			log.Infof(ctx, "all put, concurrent=%v: OK", c)
+		}
 	}
 
 	if any {
@@ -137,67 +161,13 @@ func putInTransaction(ctx context.Context, q *query, c int) error {
 
 }
 
-func handleCase1NoTx(w http.ResponseWriter, r *http.Request) {
+func handleCase1(w http.ResponseWriter, r *http.Request) {
 
 	ctx := appengine.NewContext(r)
 
 	q, err := parseQuery(r)
 	if err != nil {
-		http.Error(w, errors.Wrap(err, "at handleCase1NoTx").Error(), http.StatusBadRequest)
-		return
-	}
-
-	ch := make(chan error, q.concurrent)
-	var wg sync.WaitGroup
-	go func() {
-		for c := 0; c < q.concurrent; c++ {
-			wg.Add(1)
-
-			go func(c int) {
-				ch <- put(ctx, q, c)
-				wg.Done()
-			}(c)
-		}
-		wg.Wait()
-		close(ch)
-	}()
-
-	me, any := make(appengine.MultiError, 0, q.concurrent), false
-	for {
-		err, ok := <-ch
-		if !ok {
-			break
-		}
-
-		if err != nil {
-			me = append(me, err)
-			any = true
-		}
-	}
-
-	w.Header().Set("Context-Type", "application/json")
-	m := &struct {
-		Message string
-	}{
-		Message: "OK",
-	}
-	if any {
-		m.Message = me.Error()
-		//log.Errorf(ctx, me.Error())
-		w.WriteHeader(http.StatusInternalServerError)
-	}
-
-	b, _ := json.Marshal(m)
-	w.Write(b)
-}
-
-func handleCase1Tx(w http.ResponseWriter, r *http.Request) {
-
-	ctx := appengine.NewContext(r)
-
-	q, err := parseQuery(r)
-	if err != nil {
-		http.Error(w, errors.Wrap(err, "at handleCase1Tx").Error(), http.StatusBadRequest)
+		http.Error(w, errors.Wrap(err, "at handleCase1").Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -236,7 +206,6 @@ func handleCase1Tx(w http.ResponseWriter, r *http.Request) {
 	}
 	if any {
 		m.Message = me.Error()
-		//log.Errorf(ctx, me.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 
@@ -252,7 +221,7 @@ func inc(ctx context.Context, q *query, c int) error {
 	id := "0000"
 	k := datastore.NewKey(ctx, "case1-child", id, 0, pkey)
 
-	e := &Entity{}
+	e := &entity{}
 
 	err := datastore.Get(ctx, k, e)
 	if err != nil {
@@ -343,7 +312,6 @@ func handleCase1IncValue(w http.ResponseWriter, r *http.Request) {
 	}
 	if any {
 		m.Message = me.Error()
-		//log.Errorf(ctx, me.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 

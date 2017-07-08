@@ -18,19 +18,14 @@ func init() {
 	http.HandleFunc("/_ah/tq/hello", handleHello)
 }
 
-func defaultValue(v, dv string) string {
-
-	if v == "" {
-		return dv
-	}
-	return v
-}
-
 func handleCase4(w http.ResponseWriter, r *http.Request) {
 
 	ctx := appengine.NewContext(r)
 
-	e := defaultValue(r.FormValue("err"), "0")
+	e := false
+	if r.FormValue("err") == "t" {
+		e = true
+	}
 
 	err := datastore.RunInTransaction(ctx, func(ctx context.Context) error {
 
@@ -39,7 +34,7 @@ func handleCase4(w http.ResponseWriter, r *http.Request) {
 			return err
 		}
 
-		if e == "1" {
+		if e {
 			return errors.New("dummy error")
 		}
 		return nil

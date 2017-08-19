@@ -56,3 +56,9 @@ https://cloud.google.com/appengine/docs/standard/go/datastore/structuring_for_st
 - childとconcurrentを変更した場合、制約がどのように現れるか
 
 ![model](https://docs.google.com/drawings/d/15btUDt7gwEp3QBR_wVpnhbmfagla2PC9jn1phr2XR0o/pub?w=779&amp;h=358)
+
+---
+
+- concurrent=1の場合は、同時に1トランザクションなので特に制約に引っかからない
+- concurrent=2以降はどうなるか？
+![sheet](https://docs.google.com/drawings/d/1Q_4YEsBFD2_lSUoKqneKklzA2YRCtn_9dYZn3ECqmtg/pub?w=802&h=267)

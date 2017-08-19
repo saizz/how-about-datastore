@@ -62,3 +62,11 @@ https://cloud.google.com/appengine/docs/standard/go/datastore/structuring_for_st
 - concurrent=1の場合は、同時に1トランザクションなので特に制約に引っかからない
 - concurrent=2以降はどうなるか？
 ![sheet](https://docs.google.com/drawings/d/1Q_4YEsBFD2_lSUoKqneKklzA2YRCtn_9dYZn3ECqmtg/pub?w=802&h=267)
+
+---
+
+https://xxx.appspot.com/case1?concurrent=2&child1
+
+同時2なので、putのログは2つ出力されるはずだが、3つ出力されている・・・
+
+![result-log](https://docs.google.com/drawings/d/14oYjNwR2okmw1Q34UT-Bh_LRgq3z-PpS1W6cVcwdmUA/pub?w=586&h=390)

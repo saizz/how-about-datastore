@@ -28,3 +28,13 @@ $ vi src/backend/app.yaml
 $ gcloud app create --region=asia-northeast1 --project=xxx
 $ goapp deploy src/backend
 ```
+
+---
+
+### Case1 トランザクション同時実行の制約
+
+---
+
+### 同じエンティティグループに、同時に多くの操作を行うとエラーになるよ
+
+https://cloud.google.com/appengine/docs/standard/go/datastore/transactions

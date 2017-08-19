@@ -76,7 +76,7 @@ https://cloud.google.com/appengine/docs/standard/go/datastore/structuring_for_st
 
 ---
 
-では、手始めにconcurrent=2, child=2とした場合、どうなるか
+では、次にconcurrent=2, child=2とした場合、どうなるか
 
 ---
 
@@ -85,3 +85,8 @@ https://xxx.appspot.com/case1?concurrent=2&child1
 同時2なので、putのログは2つ出力されるはずだが、3つ出力されている・・・
 
 ![result-log](https://docs.google.com/drawings/d/14oYjNwR2okmw1Q34UT-Bh_LRgq3z-PpS1W6cVcwdmUA/pub?w=586&h=390)
+
+---
+
+思わず、traceを見てみる
+![result-trace](https://docs.google.com/drawings/d/1_GhYRHDJr0Xcq9NJU_cG4pOmlZ37tb5H_oeYB54bwkc/pub?w=865&h=425)

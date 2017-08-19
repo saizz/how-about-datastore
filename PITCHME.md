@@ -1,13 +1,14 @@
 ### How about datastore- - 
+
 GCPUG Shonan vol.16 feat.Datastore
-- 
+
 ---
 
 ### お品書き
 
 - Case1 トランザクション同時実行の制約
 - Case2 トランザクション内、Entity Groupの制約
-- Case3 トランザクションの有効期限- - 
+- Case3 トランザクションの有効期限
 - Case4 task queueはroll back対象？
 
 --- 

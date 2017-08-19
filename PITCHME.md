@@ -76,7 +76,7 @@ https://cloud.google.com/appengine/docs/standard/go/datastore/structuring_for_st
 
 ---
 
-では、次にconcurrent=2, child=2とした場合、どうなるか
+では、次にconcurrent=2, child=1とした場合、どうなるか
 
 ---
 
@@ -90,3 +90,42 @@ https://xxx.appspot.com/case1?concurrent=2&child1
 
 思わず、traceを見てみる
 ![result-trace](https://docs.google.com/drawings/d/1_GhYRHDJr0Xcq9NJU_cG4pOmlZ37tb5H_oeYB54bwkc/pub?w=865&h=425)
+
+---
+
+GAE/Goでは、Appengine SDK側で、デフォルト2回のリトライをするようになっている
+![appnegine-sdk](https://docs.google.com/drawings/d/1QMBrcEXLt0VWRQadbYgP_8oIxO_dEbH6q_ZdqcgYGIQ/pub?w=847&h=350)
+
+---
+
+ドキュメントにも書いてある
+
+https://cloud.google.com/appengine/docs/standard/go/datastore/transactions
+
+![trx-document](https://docs.google.com/drawings/d/1U9EiPEuMODIjqBw61uhAQ9V7GjONN0PmWvdmjTe2pGc/pub?w=902&h=213)
+
+---
+
+結果は
+
+![result-sheet](https://docs.google.com/drawings/d/1Fxs4kvROo8andi_fsL3i6BPn3SJ2p06AeTKJv0yGHo4/pub?w=686&h=272)
+
+---
+concurrent=10にしたら、1回目で9 transactionは失敗して、2回目で8 transactionが失敗して、となりそうだが・・・
+
+---
+
+https://xxx.appspot.com/case1?concurrent=10&child1
+![result-trace-10_1](https://docs.google.com/drawings/d/1OmewpqJV7tqgVxTSAtlelMRlM8hhgz79w2NrVlj6gFA/pub?w=960&h=720)
+
+---
+
+![result-trace-10_2](https://docs.google.com/drawings/d/199DKUgqeiIlC5KAqzvt0FkEYZakoYZVoRlcG8FNUNXQ/pub?w=960&h=720)
+
+---
+
+- transactionの同時実行で、commit失敗が戻ってくるタイミングが微妙にずれるので、2回目のtrasactionは、予想より成功している
+- つまり、同時でなければ、順番にtransactionは成功している
+
+
+---

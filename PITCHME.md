@@ -82,8 +82,7 @@ https://cloud.google.com/appengine/docs/standard/go/datastore/structuring_for_st
 
 https://xxx.appspot.com/case1?concurrent=2&child1
 
-同時2なので、putのログは2つ出力されるはずだが、3つ出力されている・・・
-
+putのログは2つ出力されるはずだが、3つ出力されている・・・
 ![result-log](https://docs.google.com/drawings/d/14oYjNwR2okmw1Q34UT-Bh_LRgq3z-PpS1W6cVcwdmUA/pub?w=586&h=390)
 
 ---
@@ -125,7 +124,48 @@ https://xxx.appspot.com/case1?concurrent=10&child1
 ---
 
 - transactionの同時実行で、commit失敗が戻ってくるタイミングが微妙にずれるので、2回目のtrasactionは、予想より成功している
-- つまり、同時でなければ、順番にtransactionは成功している
-
+- つまり、同時でなければ、順番にtransactionは成功する
 
 ---
+
+### Case2 トランザクション内、Entity Groupの制約
+
+---
+
+https://cloud.google.com/appengine/docs/standard/go/datastore/entities
+
+![eg-doc](https://docs.google.com/drawings/d/1trTagwXOTk4cuThG6Bg1Pyw8dS7ASx3T-yz9Qnn8EdY/pub?w=902&h=273)
+
+---
+
+1 transaction内でputするEntity Groupの数(parentの数)を変えていった場合、制約がどうあらわれるか?
+
+---
+
+図にすると
+
+![model](https://docs.google.com/drawings/d/1Mk9-R8KuZcjA77YwzYDMdkVtG_6ctfTikcSSHdPmOkg/pub?w=847&h=485)
+
+---
+
+concurrent=1
+![eg-sheet](https://docs.google.com/drawings/d/1rjJ8vLP6-Q8XZL5ksH59Wzt4VE51j2ElJlqcxtXbubc/pub?w=475&h=265)
+
+- parent=1ならCase1と変わらない。parent=2以上の場合のどうなるか
+
+---
+
+結果は
+![result](https://docs.google.com/drawings/d/1AyiY_7itdPuWYl6xZb8zqx6Kgs0w2h6dMpqblxFNFnA/pub?w=475&h=265)
+
+---
+
+https://xxx.appspot.com/case2?concurrent=1&parent=26&child=1
+
+![log](https://docs.google.com/drawings/d/1ZsP-oTQGheoxlFwbZaurN9ppYrdMPonZSuhSe3T2sqU/pub?w=730&h=102)
+
+API error 1 (datastore_v3: BAD_REQUEST): operating on too many entity groups in a single transaction.
+
+---
+
+- 1 transaction内で更新可能なEntity Groupの上限は、仕組み上、25という上限がありそう

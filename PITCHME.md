@@ -34,17 +34,12 @@ $ goapp deploy src/backend
 ### Case1 トランザクション同時実行の制約
 
 ---
-
-## 同じエンティティグループに、同時に多くの操作を行うとエラーになるよ
+https://cloud.google.com/appengine/docs/standard/go/datastore/transactions
 
 ![001-trx](slide-images/001-trx.png)
 
-https://cloud.google.com/appengine/docs/standard/go/datastore/transactions
-
 ---
 
-## ここでも
+https://cloud.google.com/appengine/docs/standard/go/datastore/entities
 
 ![002-trx](slide-images/002-trx.png)
-
-https://cloud.google.com/appengine/docs/standard/go/datastore/entities

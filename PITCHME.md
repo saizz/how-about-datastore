@@ -48,7 +48,7 @@ https://cloud.google.com/appengine/docs/standard/go/datastore/entities
 
 https://cloud.google.com/appengine/docs/standard/go/datastore/structuring_for_strong_consistency
 
-![003-trx.png](slide-images/003-trx.png)
+![ds-trx-003.png](https://docs.google.com/drawings/d/1Bw8iQ-DSE9d0_oVLm5dZlJDcamO5-KbsVoSboI1XEOw/pub?w=897&h=245)
 
 ---
 

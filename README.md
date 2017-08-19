@@ -8,4 +8,4 @@ GCPUG Shonan vol.16 feat.Datastoreで発表するために、datastoreの気に�
 
 また、説明を若干追加した版を以下で公開しています。
 
-https://gitpitch.com/saizz/how-about-datastore
+[![GitPitch](https://gitpitch.com/assets/badge.svg)](https://gitpitch.com/saizz/how-about-datastore/master?grs=github&t=white)

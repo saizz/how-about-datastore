@@ -1,5 +1,3 @@
 theme : white
 theme-override : PITCHME.css
-#logo : gcpug-logo.png
-#footnote : https://gcpug.jp
 slide-number : true

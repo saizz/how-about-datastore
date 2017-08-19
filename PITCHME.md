@@ -1,7 +1,5 @@
 ### How about datastore
 
-GCPUG Shonan vol.16 feat.Datastore
-
 ---
 
 ### お品書き

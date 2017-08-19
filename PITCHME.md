@@ -9,11 +9,11 @@ GCPUG Shonan vol.16 feat.Datastore
 - Case1 トランザクション同時実行の制約
 - Case2 トランザクション内、Entity Groupの制約
 - Case3 トランザクションの有効期限
-- Case4 task queueはroll back対象？
+- Case4 task queue登録後にtransactionのroll back
 
 ---
 
-### 検証プログラムのデプロイデプロイ
+### 検証プログラムのデプロイ
 
 ```
 # in cloud shell
@@ -36,7 +36,6 @@ $ goapp deploy src/backend
 
 - transactionを使うと一つのEntity Groupについて1回/秒の制約とよく言われるが具体的にどのような制約なのか?
 - 10回/秒ぐらいはいけると聴いたこともある
-- 実際にちょっとしたプログラムを書いて検証してみた
 
 ---
 https://cloud.google.com/appengine/docs/standard/go/datastore/transactions
@@ -187,5 +186,74 @@ single group transactionとcross group transactionは、仕組み自体が異な
 - cross group transactionを有効にいていないと、2の場合でもエラーを返される
 - cross group transactionが有効で、実際に更新するEntity Groupが1つであっても、それはエラーにはしていない
 
+---
 
+### Case3 トランザクションの有効期限
+
+---
+
+![expired-doc](https://docs.google.com/drawings/d/1iQ9ngAy639TtryI7u2ulmpXfAZWSum9S7CPWa585orQ/pub?w=791&h=355)
+
+---
+
+- task queueでtransactionを実行
+- transaction内でsleepで時間を潰す
+- sleep時間を60秒前後でどうなるか
+
+---
+
+図にすると、こんな感じ
+
+![model](https://docs.google.com/drawings/d/18hrdJY6hwJfBRNT1dOiuSXuMfADBefS78VivP83HDNc/pub?w=470&h=278)
+
+---
+
+![sheet](https://docs.google.com/drawings/d/1IA1Ok6fJBwRbmeR-I-fjJ761YtHma5flaS0kjxN-OGw/pub?w=304&h=307)
+
+- nを70にした場合、どうなるか
+
+---
+
+https://xxx.appspot.com/case3?n=70
+
+![log](https://docs.google.com/drawings/d/1EG3h6ys5buhNeFqITgoKFxRj66JwufjAEfZ3yjOMh_s/pub?w=777&h=397)
+
+---
+
+結果は
+
+![result](https://docs.google.com/drawings/d/1i9MsFdM6wA3W-O6o-tV7OkebSfvMMMdU-AbUoyZvIIQ/pub?w=304&h=307)
+
+---
+
+- 60秒たった時点で、transactionが打ち切りになるわけでない
+- 70秒たって、RunInTransactionからエラーが返る
+
+---
+
+### Case4 task queue登録後にtransactionのroll back
+
+---
+
+![taskqueue-doc](https://docs.google.com/drawings/d/1vmSriP-IOrwaV-lio939eCGu3s-ac6yXhDWTtg84AQI/pub?w=899&h=196)
+
+---
+
+- transaction内でtask queueの登録を行い、その後にroll backされた場合、task queueは実行されないのか?
+
+---
+
+図にすると、こんな感じ
+
+![model](https://docs.google.com/drawings/d/1CByu9tYkfCOW-sQ8sZL_TzNZaMocEMYaSp_fdv5SOcM/pub?w=553&h=233)
+
+---
+
+![sheet](https://docs.google.com/drawings/d/1NAqhT5mb6QpuxEs8-H3RL3Vvr2Izzcx_CL3y_3uqCrM/pub?w=252&h=177)
+
+---
+
+結果は
+
+![result](https://docs.google.com/drawings/d/18HD42Xua7FeDFdjPj_fRTkE3KySVbbhrIkbqJMtW_Co/pub?w=807&h=463)
 

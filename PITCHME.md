@@ -36,13 +36,13 @@ $ goapp deploy src/backend
 ---
 https://cloud.google.com/appengine/docs/standard/go/datastore/transactions
 
-![001-trx](slide-images/001-trx.png)
+![ds-trx-001](https://docs.google.com/drawings/d/1lmCWEhpPO7FD5oUIJ26K3mkhj_lqwCutSy4QkSEW5TU/pub?w=910&h=316)
 
 ---
 
 https://cloud.google.com/appengine/docs/standard/go/datastore/entities
 
-![002-trx](slide-images/002-trx.png)
+![ds-trx-002](https://docs.google.com/drawings/d/1grP6O60ewGkLasIusR2_4nHeBhFLgLLbA8O6QR0L21U/pub?w=914&h=272)
 
 ---
 
@@ -52,6 +52,7 @@ https://cloud.google.com/appengine/docs/standard/go/datastore/structuring_for_st
 
 ---
 
-同じエンティティグループに対するトランザクションの同時実行を、以下のような一般的なモデルにし、childとconcurrentを変更するとどうなるか
+- 同じエンティティグループに対するトランザクションの同時実行を以下のような一般的なモデルに
+- childとconcurrentを変更した場合、制約がどのように現れるか
 
 ![model](https://docs.google.com/drawings/d/15btUDt7gwEp3QBR_wVpnhbmfagla2PC9jn1phr2XR0o/pub?w=779&amp;h=358)

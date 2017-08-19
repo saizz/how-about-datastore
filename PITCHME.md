@@ -147,7 +147,7 @@ https://cloud.google.com/appengine/docs/standard/go/datastore/entities
 
 ---
 
-図にすると
+図にするとこんな感じ
 
 ![model](https://docs.google.com/drawings/d/1Mk9-R8KuZcjA77YwzYDMdkVtG_6ctfTikcSSHdPmOkg/pub?w=847&h=485)
 
@@ -157,7 +157,9 @@ concurrent=1
 
 ![eg-sheet](https://docs.google.com/drawings/d/1rjJ8vLP6-Q8XZL5ksH59Wzt4VE51j2ElJlqcxtXbubc/pub?w=475&h=265)
 
-- parent=1ならCase1と変わらない。parent=2以上の場合のどうなるか
+---
+
+parent=1ならCase1と変わらない。parent=2以上の場合のどうなるか
 
 ---
 
@@ -175,6 +177,15 @@ API error 1 (datastore_v3: BAD_REQUEST): operating on too many entity groups in 
 
 ---
 
-1 transaction内で更新可能なEntity Groupの上限は、仕組み上、25という上限がありそう
+single group transactionとcross group transactionは、仕組み自体が異なる様子
+
+![go-doc](https://docs.google.com/drawings/d/19h1Z6_dkWwRtK1kAbt695d-C7W67kfCpNFDqylw2Pdw/pub?w=677&h=293)
+
+---
+
+- 1 transaction内で更新可能なEntity Groupの上限は、仕組み上、25という上限がありそう
+- cross group transactionを有効にいていないと、2の場合でもエラーを返される
+- cross group transactionが有効で、実際に更新するEntity Groupが1つであっても、それはエラーにはしていない
+
 
 

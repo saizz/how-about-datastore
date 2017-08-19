@@ -28,10 +28,15 @@ $ vi src/backend/app.yaml
 $ gcloud app create --region=asia-northeast1 --project=xxx
 $ goapp deploy src/backend
 ```
-
 ---
 
 ### Case1 トランザクション同時実行の制約
+
+---
+
+- transactionを使うと一つのEntity Groupについて1回/秒の制約とよく言われるが具体的にどのような制約なのか?
+- 10回/秒ぐらいはいけると聴いたこともある
+- 実際にちょっとしたプログラムを書いて検証してみた
 
 ---
 https://cloud.google.com/appengine/docs/standard/go/datastore/transactions
@@ -52,16 +57,26 @@ https://cloud.google.com/appengine/docs/standard/go/datastore/structuring_for_st
 
 ---
 
-- 同じエンティティグループに対するトランザクションの同時実行を以下のような一般的なモデルに
+- 同じEntity Groupへの更新をtransactionで行う
+- 1 transaction内でputする回数を変えてみる(childの数)
+- transactionの同時実行数を変えてみる(concurrentの数)
 - childとconcurrentを変更した場合、制約がどのように現れるか
+- putの結果をlogに出力
+
+---
+
+図にするとこんな感じ
 
 ![model](https://docs.google.com/drawings/d/15btUDt7gwEp3QBR_wVpnhbmfagla2PC9jn1phr2XR0o/pub?w=779&amp;h=358)
 
 ---
 
-- concurrent=1の場合は、同時に1トランザクションなので特に制約に引っかからない
-- concurrent=2以降はどうなるか？
+- concurrent=1の場合は、同時には1 transactionなので特に制約に引っかからない
 ![sheet](https://docs.google.com/drawings/d/1Q_4YEsBFD2_lSUoKqneKklzA2YRCtn_9dYZn3ECqmtg/pub?w=802&h=267)
+
+---
+
+では、手始めにconcurrent=2, child=2とした場合、どうなるか
 
 ---
 

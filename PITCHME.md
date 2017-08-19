@@ -72,6 +72,7 @@ https://cloud.google.com/appengine/docs/standard/go/datastore/structuring_for_st
 ---
 
 - concurrent=1の場合は、同時には1 transactionなので特に制約に引っかからない
+
 ![sheet](https://docs.google.com/drawings/d/1Q_4YEsBFD2_lSUoKqneKklzA2YRCtn_9dYZn3ECqmtg/pub?w=802&h=267)
 
 ---
@@ -83,16 +84,19 @@ https://cloud.google.com/appengine/docs/standard/go/datastore/structuring_for_st
 https://xxx.appspot.com/case1?concurrent=2&child1
 
 putのログは2つ出力されるはずだが、3つ出力されている・・・
+
 ![result-log](https://docs.google.com/drawings/d/14oYjNwR2okmw1Q34UT-Bh_LRgq3z-PpS1W6cVcwdmUA/pub?w=586&h=390)
 
 ---
 
 思わず、traceを見てみる
+
 ![result-trace](https://docs.google.com/drawings/d/1_GhYRHDJr0Xcq9NJU_cG4pOmlZ37tb5H_oeYB54bwkc/pub?w=865&h=425)
 
 ---
 
 GAE/Goでは、Appengine SDK側で、デフォルト2回のリトライをするようになっている
+
 ![appnegine-sdk](https://docs.google.com/drawings/d/1QMBrcEXLt0VWRQadbYgP_8oIxO_dEbH6q_ZdqcgYGIQ/pub?w=847&h=350)
 
 ---
@@ -110,6 +114,7 @@ https://cloud.google.com/appengine/docs/standard/go/datastore/transactions
 ![result-sheet](https://docs.google.com/drawings/d/1Fxs4kvROo8andi_fsL3i6BPn3SJ2p06AeTKJv0yGHo4/pub?w=686&h=272)
 
 ---
+
 concurrent=10にしたら、1回目で9 transactionは失敗して、2回目で8 transactionが失敗して、となりそうだが・・・
 
 ---
@@ -149,6 +154,7 @@ https://cloud.google.com/appengine/docs/standard/go/datastore/entities
 ---
 
 concurrent=1
+
 ![eg-sheet](https://docs.google.com/drawings/d/1rjJ8vLP6-Q8XZL5ksH59Wzt4VE51j2ElJlqcxtXbubc/pub?w=475&h=265)
 
 - parent=1ならCase1と変わらない。parent=2以上の場合のどうなるか
@@ -156,6 +162,7 @@ concurrent=1
 ---
 
 結果は
+
 ![result](https://docs.google.com/drawings/d/1AyiY_7itdPuWYl6xZb8zqx6Kgs0w2h6dMpqblxFNFnA/pub?w=475&h=265)
 
 ---
@@ -168,4 +175,6 @@ API error 1 (datastore_v3: BAD_REQUEST): operating on too many entity groups in 
 
 ---
 
-- 1 transaction内で更新可能なEntity Groupの上限は、仕組み上、25という上限がありそう
+1 transaction内で更新可能なEntity Groupの上限は、仕組み上、25という上限がありそう
+
+

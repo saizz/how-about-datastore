@@ -257,3 +257,6 @@ https://xxx.appspot.com/case3?n=70
 
 ![result](https://docs.google.com/drawings/d/18HD42Xua7FeDFdjPj_fRTkE3KySVbbhrIkbqJMtW_Co/pub?w=807&h=463)
 
+---
+
+- transactionがcommit成功した時のみ、task queueの呼び出しがされる

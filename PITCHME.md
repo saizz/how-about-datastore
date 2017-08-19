@@ -11,7 +11,7 @@ GCPUG Shonan vol.16 feat.Datastore
 - Case3 トランザクションの有効期限
 - Case4 task queueはroll back対象？
 
---- 
+---
 
 ### 検証プログラムのデプロイデプロイ
 
@@ -35,6 +35,16 @@ $ goapp deploy src/backend
 
 ---
 
-### 同じエンティティグループに、同時に多くの操作を行うとエラーになるよ
+## 同じエンティティグループに、同時に多くの操作を行うとエラーになるよ
+
+![001-trx](slide-images/001-trx.png)
 
 https://cloud.google.com/appengine/docs/standard/go/datastore/transactions
+
+---
+
+## ここでも
+
+![002-trx](slide-images/002-trx.png)
+
+https://cloud.google.com/appengine/docs/standard/go/datastore/entities

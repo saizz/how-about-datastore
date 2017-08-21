@@ -32,7 +32,7 @@ $ goapp deploy src/backend
 
 ---
 
-- transactionを使うと一つのEntity Groupについて1回/秒の制約とよく言われるが具体的にどのような制約なのか?
+- transactionを使うと一つのEntity Groupについて1回/秒の更新の制約がある、とよく言われるが制約がどのように現れるか
 - 10回/秒ぐらいはいけると聴いたこともある
 
 ---
@@ -62,7 +62,7 @@ https://cloud.google.com/appengine/docs/standard/go/datastore/structuring_for_st
 
 ---
 
-図にするとこんな感じ
+図にすると、こんな感じ
 
 ![model](https://docs.google.com/drawings/d/15btUDt7gwEp3QBR_wVpnhbmfagla2PC9jn1phr2XR0o/pub?w=779&amp;h=358)
 
@@ -98,7 +98,7 @@ GAE/Goでは、Appengine SDK側で、デフォルト2回のリトライをする
 
 ---
 
-ドキュメントにも書いてある
+ドキュメントに、同時の場合、最初のtransactionだけ成功すると書いてある
 
 https://cloud.google.com/appengine/docs/standard/go/datastore/transactions
 
@@ -112,7 +112,7 @@ https://cloud.google.com/appengine/docs/standard/go/datastore/transactions
 
 ---
 
-concurrent=10にしたら、1回目で9 transactionは失敗して、2回目で8 transactionが失敗して、となりそうだが・・・
+concurrent=10にしたら、1回目で9 transactionが失敗して、2回目で8 transactionが失敗して、となりそうだが・・・
 
 ---
 
@@ -125,8 +125,8 @@ https://xxx.appspot.com/case1?concurrent=10&child1
 
 ---
 
-- transactionの同時実行で、commit失敗が戻ってくるタイミングが微妙にずれるので、2回目のtrasactionは、予想より成功している
-- つまり、同時でなければ、順番にtransactionは成功する
+- transactionの同時実行でも、commit失敗が戻ってくるタイミングが微妙にずれ、2回目のtrasactionは、予想より成功している
+- 同時でなければ、順番にtransactionは成功する
 
 ---
 

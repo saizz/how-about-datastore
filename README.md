@@ -1,6 +1,6 @@
 ### How about datastore
 
-GCPUG Shonan vol.16 feat.Datastoreで発表するために、datastoreの気になった部分の検証用プログラムになります。
+GCPUG Shonan vol.16 feat.Datastoreで発表した、datastoreの気になった部分の検証用プログラムになります。
 
 発表時の資料は以下になります。
 

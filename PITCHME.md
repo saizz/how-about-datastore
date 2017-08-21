@@ -182,7 +182,7 @@ single group transactionとcross group transactionは、仕組み自体が異な
 
 - 1 transaction内で更新可能なEntity Groupの上限は、仕組み上、25という上限がありそう
 - cross group transactionを有効にいていないと、2の場合でもエラーを返される
-- cross group transactionが有効で、実際に更新するEntity Groupが1つであっても、それはエラーにはしていない
+- cross group transactionが有効で、実際に更新するEntity Groupが1つであっても、それはエラーにならない
 
 ---
 

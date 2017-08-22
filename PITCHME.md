@@ -127,6 +127,7 @@ https://xxx.appspot.com/case1?concurrent=10&child1
 
 - transactionの同時実行でも、commit失敗が戻ってくるタイミングが微妙にずれ、2回目のtrasactionは、予想より成功している
 - 同時でなければ、順番にtransactionは成功する
+- transactionは冪等性が担保されるようにしようね
 
 ---
 
